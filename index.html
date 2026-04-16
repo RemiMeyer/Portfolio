@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rémi Meyer — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600;700&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-dark: #9A7A2E;
+    --black: #0A0A0A;
+    --black-2: #111111;
+    --black-3: #1A1A1A;
+    --white: #F5F0E8;
+    --white-dim: #C8BFA8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ─── CURSOR ─── */
+  * { cursor: none; }
+  #cursor {
+    position: fixed; width: 10px; height: 10px;
+    background: var(--gold); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transition: transform .15s ease, opacity .15s ease;
+    transform: translate(-50%, -50%);
+  }
+  #cursor-ring {
+    position: fixed; width: 36px; height: 36px;
+    border: 1px solid var(--gold); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transition: transform .35s ease, width .3s, height .3s;
+    transform: translate(-50%, -50%);
+    opacity: .5;
+  }
+
+  /* ─── TOP LINE ─── */
+  .top-line {
+    position: fixed; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    z-index: 1000;
+  }
+
+  /* ─── NAVBAR ─── */
+  nav {
+    position: fixed; top: 2px; left: 0; right: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 60px; height: 80px;
+    background: rgba(10,10,10,.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,168,76,.15);
+    z-index: 999;
+  }
+
+  .nav-logo {
+    width: 44px; height: 44px;
+    background: var(--gold);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700;
+    color: var(--black); letter-spacing: 1px;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  .nav-links {
+    display: flex; gap: 48px; list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--white-dim);
+    text-decoration: none;
+    position: relative; padding-bottom: 4px;
+    transition: color .3s;
+  }
+
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 100%;
+    height: 1px; background: var(--gold);
+    transition: right .3s ease;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+  .nav-links a:hover::after { right: 0; }
+
+  /* ─── HERO ─── */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+    padding-top: 82px;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,168,76,.07) 0%, transparent 70%),
+      repeating-linear-gradient(0deg, transparent, transparent 80px, rgba(201,168,76,.03) 80px, rgba(201,168,76,.03) 81px),
+      repeating-linear-gradient(90deg, transparent, transparent 80px, rgba(201,168,76,.03) 80px, rgba(201,168,76,.03) 81px);
+  }
+
+  .hero-eyebrow {
+    font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 5px;
+    color: var(--gold); text-transform: uppercase; margin-bottom: 24px;
+    opacity: 0; animation: fadeUp .8s .3s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif; font-size: clamp(72px, 12vw, 140px);
+    font-weight: 300; line-height: 1; color: var(--white);
+    text-align: center; letter-spacing: -2px;
+    opacity: 0; animation: fadeUp .8s .5s forwards;
+  }
+
+  .hero-title em {
+    font-style: italic; color: var(--gold);
+  }
+
+  .hero-subtitle {
+    font-family: 'Raleway', sans-serif; font-size: 13px; font-weight: 400;
+    letter-spacing: 4px; color: var(--white-dim); text-align: center;
+    margin-top: 20px; text-transform: uppercase;
+    opacity: 0; animation: fadeUp .8s .7s forwards;
+  }
+
+  .hero-divider {
+    width: 1px; height: 80px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    margin-top: 60px;
+    opacity: 0; animation: fadeUp .8s .9s forwards;
+  }
+
+  .hero-bio {
+    max-width: 600px; text-align: center;
+    font-size: 15px; line-height: 1.9; color: var(--white-dim);
+    margin-top: 32px; padding: 0 40px;
+    opacity: 0; animation: fadeUp .8s 1s forwards;
+  }
+
+  .hero-bio strong { color: var(--gold); font-weight: 500; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── SECTIONS ─── */
+  section {
+    padding: 120px 80px;
+    position: relative;
+  }
+
+  .section-label {
+    font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 5px;
+    color: var(--gold); text-transform: uppercase;
+    margin-bottom: 16px; display: block;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(40px, 6vw, 72px); font-weight: 300;
+    line-height: 1.05; margin-bottom: 48px;
+  }
+
+  .gold-line {
+    width: 60px; height: 1px; background: var(--gold);
+    margin-bottom: 48px;
+  }
+
+  /* ─── BTS SIO ─── */
+  #bts {
+    background: var(--black-2);
+    border-top: 1px solid rgba(201,168,76,.1);
+    border-bottom: 1px solid rgba(201,168,76,.1);
+  }
+
+  .bts-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center;
+    max-width: 1200px; margin: 0 auto;
+  }
+
+  .bts-big {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(60px, 10vw, 120px); font-weight: 300;
+    line-height: 1; color: rgba(201,168,76,.15);
+    letter-spacing: -2px;
+  }
+
+  .bts-content p {
+    font-size: 15px; line-height: 1.9; color: var(--white-dim);
+    margin-bottom: 24px;
+  }
+
+  .bts-content strong { color: var(--gold); font-weight: 500; }
+
+  .option-card {
+    border: 1px solid rgba(201,168,76,.2);
+    padding: 24px 28px; margin-bottom: 16px;
+    position: relative; overflow: hidden;
+    transition: border-color .3s, background .3s;
+  }
+
+  .option-card::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 3px; height: 100%; background: var(--gold);
+  }
+
+  .option-card:hover {
+    border-color: rgba(201,168,76,.5);
+    background: rgba(201,168,76,.04);
+  }
+
+  .option-card h4 {
+    font-family: 'Cinzel', serif; font-size: 13px; color: var(--gold);
+    letter-spacing: 2px; margin-bottom: 8px;
+  }
+
+  .option-card p { font-size: 13px; color: var(--white-dim); margin: 0; }
+
+  /* ─── CV ─── */
+  #cv { max-width: 1200px; margin: 0 auto; }
+
+  .cv-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 60px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid rgba(201,168,76,.15);
+  }
+
+  .btn-gold {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--black);
+    background: var(--gold); padding: 14px 28px;
+    border: none; text-decoration: none;
+    transition: background .3s, transform .2s;
+    font-weight: 600;
+  }
+
+  .btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+  .btn-outline {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--gold);
+    background: transparent; padding: 13px 28px;
+    border: 1px solid var(--gold); text-decoration: none;
+    transition: background .3s, color .3s;
+  }
+
+  .btn-outline:hover { background: var(--gold); color: var(--black); }
+
+  /* ─── STAGE ─── */
+  #stage { background: var(--black-3); }
+  #stage .inner { max-width: 1200px; margin: 0 auto; }
+
+  .stage-desc {
+    font-size: 15px; line-height: 1.9; color: var(--white-dim);
+    max-width: 700px; margin-bottom: 48px;
+  }
+
+  .stage-desc strong { color: var(--gold); font-weight: 500; }
+
+  .docs-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+
+  .doc-link {
+    display: flex; align-items: center; gap: 14px;
+    padding: 20px 24px;
+    border: 1px solid rgba(201,168,76,.2);
+    color: var(--white-dim); text-decoration: none; font-size: 13px;
+    transition: all .3s; position: relative; overflow: hidden;
+  }
+
+  .doc-link::before {
+    content: ''; position: absolute; inset: 0;
+    background: rgba(201,168,76,.05);
+    transform: translateX(-100%); transition: transform .3s;
+  }
+
+  .doc-link:hover { border-color: var(--gold); color: var(--gold); }
+  .doc-link:hover::before { transform: translateX(0); }
+
+  .doc-icon { font-size: 20px; }
+
+  /* ─── VEILLE ─── */
+  #veille { max-width: 1200px; margin: 0 auto; }
+
+  .veille-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+    margin-top: 16px;
+  }
+
+  .veille-card {
+    border: 1px solid rgba(201,168,76,.2); padding: 40px;
+    position: relative; overflow: hidden;
+    transition: border-color .3s;
+  }
+
+  .veille-card:hover { border-color: rgba(201,168,76,.6); }
+
+  .veille-card .num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 80px; font-weight: 300;
+    color: rgba(201,168,76,.08); position: absolute;
+    top: -10px; right: 20px; line-height: 1;
+    pointer-events: none;
+  }
+
+  .veille-card h4 {
+    font-family: 'Cinzel', serif; font-size: 11px;
+    letter-spacing: 3px; color: var(--gold);
+    margin-bottom: 12px; text-transform: uppercase;
+  }
+
+  .veille-card h3 {
+    font-family: 'Cormorant Garamond', serif; font-size: 26px;
+    font-weight: 400; margin-bottom: 16px; line-height: 1.2;
+  }
+
+  .veille-card p {
+    font-size: 13px; color: var(--white-dim); line-height: 1.8;
+  }
+
+  .veille-def {
+    background: rgba(201,168,76,.04);
+    border: 1px solid rgba(201,168,76,.15);
+    padding: 32px 40px; margin-bottom: 48px;
+  }
+
+  .veille-def h3 {
+    font-family: 'Cinzel', serif; font-size: 12px;
+    letter-spacing: 3px; color: var(--gold); margin-bottom: 14px;
+  }
+
+  .veille-def p { font-size: 14px; color: var(--white-dim); line-height: 1.9; }
+  .veille-def strong { color: var(--white); font-weight: 500; }
+
+  /* ─── TP & PROJETS ─── */
+  #tp {
+    background: var(--black-2);
+    border-top: 1px solid rgba(201,168,76,.1);
+  }
+
+  #tp .inner { max-width: 1200px; margin: 0 auto; }
+
+  .tp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2px;
+  }
+
+  .tp-card {
+    position: relative; overflow: hidden;
+    aspect-ratio: 1 / .85;
+    background: var(--black-3);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 32px 20px; text-align: center;
+    cursor: none;
+    transition: background .3s;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .tp-card::after {
+    content: ''; position: absolute; inset: 0;
+    border: 1px solid transparent;
+    transition: border-color .3s;
+  }
+
+  .tp-card:hover { background: rgba(201,168,76,.06); }
+  .tp-card:hover::after { border-color: rgba(201,168,76,.4); }
+
+  .tp-icon {
+    font-size: 36px; margin-bottom: 14px;
+    filter: grayscale(1) brightness(.6);
+    transition: filter .3s, transform .3s;
+  }
+
+  .tp-card:hover .tp-icon {
+    filter: grayscale(0) brightness(1);
+    transform: scale(1.1);
+  }
+
+  .tp-card h4 {
+    font-family: 'Cinzel', serif; font-size: 10px;
+    letter-spacing: 2px; color: var(--white-dim);
+    text-transform: uppercase; transition: color .3s;
+  }
+
+  .tp-card:hover h4 { color: var(--gold); }
+
+  .tp-tag {
+    font-size: 10px; color: rgba(201,168,76,.5);
+    margin-top: 8px; font-family: 'Raleway', sans-serif;
+    letter-spacing: 1px;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    border-top: 1px solid rgba(201,168,76,.15);
+    padding: 48px 80px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .footer-name {
+    font-family: 'Cormorant Garamond', serif; font-size: 22px;
+    font-weight: 300; color: var(--white);
+  }
+
+  .footer-name em { font-style: italic; color: var(--gold); }
+
+  .footer-right {
+    font-size: 11px; letter-spacing: 2px;
+    color: rgba(201,168,76,.4); text-transform: uppercase;
+  }
+
+  /* ─── SCROLL REVEAL ─── */
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1; transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<div class="top-line"></div>
+
+<nav>
+  <a class="nav-logo" href="#hero">RM</a>
+  <ul class="nav-links">
+    <li><a href="#cv">CV</a></li>
+    <li><a href="#stage">Stage</a></li>
+    <li><a href="#veille">Veille</a></li>
+    <li><a href="#tp">TP &amp; Projets</a></li>
+  </ul>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <p class="hero-eyebrow">Portfolio — BTS SIO SISR</p>
+  <h1 class="hero-title">Rémi <em>Meyer</em></h1>
+  <p class="hero-subtitle">Solutions d'Infrastructure &amp; Réseaux</p>
+  <div class="hero-divider"></div>
+  <p class="hero-bio">
+    Bienvenue sur mon Portfolio. Je suis en <strong>2ème année de BTS SIO</strong> option <strong>SISR</strong> à Joinville-le-Pont, Sainte-Marie. Titulaire d'un <strong>bac STI2D option SIN</strong> au Lycée Édouard Branly à Créteil.
+  </p>
+</section>
+
+<!-- ─── BTS SIO ─── -->
+<section id="bts">
+  <div class="bts-grid">
+    <div class="bts-big">BTS<br>SIO</div>
+    <div class="bts-content reveal">
+      <span class="section-label">Formation</span>
+      <h2 class="section-title" style="font-size:clamp(32px,4vw,52px);">Qu'est-ce que<br>le BTS SIO ?</h2>
+      <p>
+        Le <strong>BTS SIO</strong> (Services Informatiques aux Organisations) est un diplôme de niveau Bac+2 qui forme des spécialistes en informatique capables de gérer et développer des solutions pour les entreprises.
+      </p>
+      <div class="option-card">
+        <h4>SISR</h4>
+        <p>Solutions d'Infrastructure, Systèmes et Réseaux — gestion des infrastructures informatiques et développement d'applications.</p>
+      </div>
+      <div class="option-card">
+        <h4>SLAM</h4>
+        <p>Solutions Logicielles et Applications Métiers — développement de logiciels et d'applications métiers pour les entreprises.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CV ─── -->
+<section>
+  <div id="cv" class="reveal">
+    <span class="section-label">Parcours</span>
+    <div class="cv-header">
+      <h2 class="section-title" style="margin-bottom:0;">Curriculum<br><em style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);">Vitae</em></h2>
+      <a href="https://drive.google.com/file/d/1hyqC2TST7bwtcWTXPhtA9g4mPzBTqXj9/view" class="btn-gold">Voir le CV →</a>
+    </div>
+    <p style="font-size:15px;color:var(--white-dim);line-height:1.9;max-width:600px;">
+      Retrouvez l'ensemble de mon parcours académique et professionnel, mes compétences techniques et mes expériences acquises au cours de ma formation BTS SIO SISR.
+    </p>
+  </div>
+</section>
+
+<!-- ─── STAGE ─── -->
+<section id="stage">
+  <div class="inner">
+    <span class="section-label">Expérience</span>
+    <h2 class="section-title reveal">Stage</h2>
+    <div class="gold-line"></div>
+    <p class="stage-desc reveal">
+      Cette page est dédiée à mon <strong>stage de 1ère et 2ème année</strong>, où l'on peut retrouver ma note de synthèse de 1ère et 2ème année, ainsi que le cahier des charges de 2ème année. Vous y trouverez une présentation détaillée de mes tâches et des compétences acquises au cours de ces deux années.
+    </p>
+    <div class="docs-grid reveal">
+      <a href="https://drive.google.com/file/d/13qE3FdWERvpGpHzzidBtzelMsrjYy1nx/view" class="doc-link">
+        <span class="doc-icon">📄</span>
+        Note de synthèse de 1ère année
+      </a>
+      <a href="https://drive.google.com/file/d/1yGNhPsg_Yk8VOvt_VxFGW1oKWN10wFnP/view" class="doc-link">
+        <span class="doc-icon">📄</span>
+        Note de synthèse de 2ème année
+      </a>
+      <a href="https://drive.google.com/file/d/1IDPhJ-tp39q1OsXvGRpkIcDSCvTClPjm/view" class="doc-link">
+        <span class="doc-icon">📋</span>
+        Cahier des charges de 2ème année
+      </a>
+      <a href="https://drive.google.com/file/d/16825gGP5izzWVNmkzf0CObYisoAtgNfr/view" class="doc-link">
+        <span class="doc-icon">📷</span>
+        Photo de stages 2ème année
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── VEILLE ─── -->
+<section>
+  <div id="veille" style="max-width:1200px;margin:0 auto;">
+    <span class="section-label">Technologie</span>
+    <h2 class="section-title reveal">Veille</h2>
+    <div class="veille-def reveal">
+      <h3>Qu'est-ce que la veille technologique ?</h3>
+      <p>
+        La veille technologique est un processus de <strong>surveillance continue des évolutions technologiques</strong>. Elle consiste à <strong>collecter, analyser des informations</strong> sur les nouvelles tendances, innovations et développements dans un secteur spécifique.
+      </p>
+    </div>
+    <div class="veille-grid reveal">
+      <a href="https://drive.google.com/file/d/1D2iAnlsJOre1uQRl5qSEvj_eMEVWTVdl/view" target="_blank" class="veille-card" style="text-decoration:none;color:inherit;display:block;">
+        <div class="num">01</div>
+        <h4>Veille Technologique</h4>
+        <h3>L'interface cerveau machine</h3>
+        <p>Sujet de ma veille technologique portant sur les interfaces neuronales et la communication directe entre le cerveau humain et les systèmes informatiques.</p>
+      </a>
+      <a href="https://drive.google.com/file/d/1YvdiSGmsiLgHhPXIN6R0gzDZOrsAGULa/view" target="_blank" class="veille-card" style="text-decoration:none;color:inherit;display:block;">
+        <div class="num">02</div>
+        <h4>Veille Cybersécurité</h4>
+        <h3>Le vol de donnée neuronal</h3>
+        <p>Sujet de ma veille en cybersécurité portant sur les menaces liées à l'extraction non autorisée de données neurales et les risques associés à ces nouvelles technologies.</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── TP & PROJETS ─── -->
+<section id="tp">
+  <div class="inner">
+    <span class="section-label">Pratique</span>
+    <h2 class="section-title reveal">TP &amp; Projets</h2>
+    <p style="font-size:13px;color:rgba(201,168,76,.5);letter-spacing:2px;text-transform:uppercase;margin-bottom:48px;" class="reveal">
+      Cliquer sur les projets pour accéder aux fichiers
+    </p>
+    <div class="tp-grid reveal">
+      <a href="https://drive.google.com/file/d/1M5Wf40LJa0e-CN6jFcZ1GjTutT5k6WHT/view" target="_blank" class="tp-card">
+        <div class="tp-icon">🌐</div>
+        <h4>Les VLAN</h4>
+        <p class="tp-tag">Réseau local virtuel</p>
+      </a>
+      <a href="https://drive.google.com/file/d/121Ch3bnQqwcaE4wYS_P6IBoYeQ1EELCs/view" target="_blank" class="tp-card">
+        <div class="tp-icon">🖥️</div>
+        <h4>Windows Server</h4>
+        <p class="tp-tag">Running High-tech</p>
+      </a>
+      <a href="https://drive.google.com/file/d/1grG8Ym6DIB34fC4ZshiovdUPjCogWnB6/view?usp=sharing" target="_blank" class="tp-card">
+        <div class="tp-icon">⚡</div>
+        <h4>PowerShell</h4>
+        <p class="tp-tag">Scripting</p>
+      </a>
+      <a href="https://drive.google.com/file/d/1_r0Pfm8yj2H_rtGb7l7e8UHFpwk4CBts/view?usp=sharing" target="_blank" class="tp-card">
+        <div class="tp-icon">⌨️</div>
+        <h4>MS-DOS</h4>
+        <p class="tp-tag">Ligne de commande</p>
+      </a>
+      <a href="https://drive.google.com/file/d/1BHoISEnkfBWt4NmBol6v_LLmOrBiqLLg/view?usp=sharing" target="_blank" class="tp-card">
+        <div class="tp-icon">💾</div>
+        <h4>RAID</h4>
+        <p class="tp-tag">Stockage redondant</p>
+      </a>
+      <a href="https://drive.google.com/file/d/1KPETSfM3v5lLbhf_F57GYPF6Q6QW-qew/view?usp=sharing" target="_blank" class="tp-card">
+        <div class="tp-icon">🔀</div>
+        <h4>Routage</h4>
+        <p class="tp-tag">Infrastructure réseau</p>
+      </a>
+      <a href="https://drive.google.com/file/d/15s3PMl-cCjaBF75S_EALzs8oKVKTCy68/view?usp=sharing" target="_blank" class="tp-card">
+        <div class="tp-icon">♾️</div>
+        <h4>Routage dynamique</h4>
+        <p class="tp-tag">Protocoles dynamiques</p>
+      </a>
+      <a href="https://drive.google.com/file/d/1TUUmVQunKeMkIyyMLsjSCv2bP3fbrHvy/view?usp=sharing" target="_blank" class="tp-card">
+        <div class="tp-icon">🗂️</div>
+        <h4>Formatage</h4>
+        <p class="tp-tag">Gestion des disques</p>
+      </a>
+      <a href="https://drive.google.com/file/d/10xyzerpfutck_RkFrBv9jO2nfMe8QXe0/view?usp=sharing" target="_blank" class="tp-card">
+        <div class="tp-icon">🐧</div>
+        <h4>Linux</h4>
+        <p class="tp-tag">Administration système</p>
+      </a>
+      <a href="https://drive.google.com/file/d/1nR13dZ0excBe8sV7oJbbOF4Q_6H8GwN8/view?usp=sharing" target="_blank" class="tp-card">
+        <div class="tp-icon">🔌</div>
+        <h4>Port</h4>
+        <p class="tp-tag"> Port </p>
+      </a>
+      <a href="https://drive.google.com/file/d/1KJ57kP-sUFxQ_PvvqHtDNY2zs5T8h3RQ/view?usp=sharing" target="_blank" class="tp-card">
+        <div class="tp-icon">🏠</div>
+        <h4>Maison des Ligues</h4>
+        <p class="tp-tag">Projet client</p>
+      </a>
+      <a href="https://docs.google.com/spreadsheets/d/18McSrLLNre6v4dU6dzg10Ds7WmT1UTUpPFHv5dMF28g/edit?usp=sharing" target="_blank" class="tp-card">
+        <div class="tp-icon">📊</div>
+        <h4>Tableau de synthèse</h4>
+        <p class="tp-tag">Excel / Bilan</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <p class="footer-name">Rémi <em>Meyer</em></p>
+  <p class="footer-right">BTS SIO SISR · 2025</p>
+</footer>
+
+<script>
+  // Custom cursor
+  const cur = document.getElementById('cursor');
+  const ring = document.getElementById('cursor-ring');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cur.style.left = mx + 'px';
+    cur.style.top = my + 'px';
+  });
+
+  function animRing() {
+    rx += (mx - rx) * .12;
+    ry += (my - ry) * .12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+
+  document.querySelectorAll('a, button, .tp-card, .option-card, .doc-link').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      ring.style.width = '60px';
+      ring.style.height = '60px';
+      ring.style.opacity = '.8';
+    });
+    el.addEventListener('mouseleave', () => {
+      ring.style.width = '36px';
+      ring.style.height = '36px';
+      ring.style.opacity = '.5';
+    });
+  });
+
+  // Scroll reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: .12 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
